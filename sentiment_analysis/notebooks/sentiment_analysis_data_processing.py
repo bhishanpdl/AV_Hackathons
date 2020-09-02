@@ -14,6 +14,9 @@ import multiprocessing as mp
 import nltk
 from nltk.corpus import stopwords
 
+import unidecode
+import wordninja
+
 time_start = time.time()
 
 # Load the data
@@ -129,18 +132,32 @@ def process_text(text):
     s = pd.Series([sentence])
     
     # step: expand shortcuts
-    shortcuts = {'u': 'you', 'y': 'why', 'r': 'are',
-                 'doin': 'doing', 'hw': 'how',
-                 'k': 'okay', 'm': 'am', 'b4': 'before',
-                 'idc': "i do not care", 'ty': 'thankyou',
-                 'wlcm': 'welcome', 'bc': 'because',
-                 '<3': 'love', 'xoxo': 'love',
-                 'ttyl': 'talk to you later', 'gr8': 'great',
-                 'bday': 'birthday', 'awsm': 'awesome',
-                 'gud': 'good', 'h8': 'hate',
-                 'lv': 'love', 'dm': 'direct message',
-                 'rt': 'retweet', 'wtf': 'hate',
-                 'idgaf': 'hate','irl': 'in real life',
+    shortcuts = {'<3': 'love',
+                 'awsm': 'awesome',
+                 'b4': 'before',
+                 'bc': 'because',
+                 'bday': 'birthday',
+                 'dm': 'direct message',
+                 'doin': 'doing',
+                 'gr8': 'great',
+                 'gud': 'good',
+                 'h8': 'hate',
+                 'hw': 'how',
+                 'idc': 'i do not care',
+                 'idgaf': 'hate',
+                 'irl': 'in real life',
+                 'k': 'okay',
+                 'lv': 'love',
+                 'm': 'am',
+                 'r': 'are',
+                 'rt': 'retweet',
+                 'ttyl': 'talk to you later',
+                 'ty': 'thank you',
+                 'u': 'you',
+                 'wlcm': 'welcome',
+                 'wtf': 'hate',
+                 'xoxo': 'love',
+                 'y': 'why',
                  'yolo': 'you only live once'}
 
     sa = pd.Series(s.str.split()[0])
@@ -280,6 +297,12 @@ def process_text_emoji(text):
 
     """
     s = pd.Series([text])
+    
+    # step: decode unicode characters
+    s = s.apply(unidecode.unidecode)
+    
+    # step: howareyou ==> how are you
+    s = s.apply(lambda x: ' '.join(wordninja.split(x)))
     
     # step: expand emoticons and emojis
     s = s.apply(convert_emoticons)

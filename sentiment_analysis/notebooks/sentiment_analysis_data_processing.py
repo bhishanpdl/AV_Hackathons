@@ -43,7 +43,6 @@ def parallelize_dataframe(df, func):
     pool.join()
     return df
 
-from urllib.parse import urlparse
 def is_url(url):
     try:
         result = urlparse(url)
@@ -416,4 +415,4 @@ time_taken = time.time() - time_start
 m,s = divmod(time_taken,60)
 print(f"Data cleaning finished in {m} min {s:.2f} sec.")
 
-# Data cleaning finished in 12.0 min 6.19 sec.
+# Data cleaning finished in 13.0 min 28.34 sec.

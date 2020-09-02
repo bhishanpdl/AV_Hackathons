@@ -43,6 +43,7 @@ def parallelize_dataframe(df, func):
     pool.join()
     return df
 
+from urllib.parse import urlparse
 def is_url(url):
     try:
         result = urlparse(url)

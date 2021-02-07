@@ -3,30 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>e02_sentiment_analysis_transformers_distilbert_keras</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script><script>
-(function() {
-  function addWidgetsRenderer() {
-    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
-    var scriptElement = document.createElement('script');
-    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
-    var widgetState;
-
-    // Fallback for older version:
-    try {
-      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
-
-      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
-        widgetRendererSrc = 'https://unpkg.com/jupyter-js-widgets@*/dist/embed.js';
-      }
-    } catch(e) {}
-
-    scriptElement.src = widgetRendererSrc;
-    document.body.appendChild(scriptElement);
-  }
-
-  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
-}());
-</script>
+<title>a03_scattertext_sentiment</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14282,35 +14259,42 @@ a.anchor-link {
 
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Description">Description<a class="anchor-link" href="#Description">&#182;</a></h1><h1 id="Descriptions">Descriptions<a class="anchor-link" href="#Descriptions">&#182;</a></h1><ul>
-<li>BERT stands for Bidirectional Encoder Representations from Transformers</li>
-<li>BERT was developed by researchers at Google in 2018</li>
-<li>BERT is a text representation technique like Word Embeddings.</li>
-</ul>
-<p>Ref: <a href="https://www.kaggle.com/madz2000/sentiment-analysis-cleaning-eda-bert-88-acc">https://www.kaggle.com/madz2000/sentiment-analysis-cleaning-eda-bert-88-acc</a></p>
-<p>BERT WORKING
-BERT relies on a Transformer (the attention mechanism that learns contextual relationships between words in a text). A basic Transformer consists of an encoder to read the text input and a decoder to produce a prediction for the task. Since BERT’s goal is to generate a language representation model, it only needs the encoder part. The input to the encoder for BERT is a sequence of tokens, which are first converted into vectors and then processed in the neural network. But before processing can start, BERT needs the input to be massaged and decorated with some extra metadata:</p>
-<ol>
-<li><p>Token embeddings: A <code>[CLS]</code> token is added to the input word tokens at the beginning of the first sentence and a <code>[SEP]</code> token is inserted at the end of each sentence.</p>
-</li>
-<li><p>Segment embeddings: A marker indicating Sentence A or Sentence B is added to each token. This allows the encoder to distinguish between sentences.</p>
-</li>
-<li><p>Positional embeddings: A positional embedding is added to each token to indicate its position in the sentence.</p>
-</li>
-</ol>
-<p>Ref: <a href="https://towardsml.com/2019/09/17/bert-explained-a-complete-guide-with-theory-and-tutorial/">https://towardsml.com/2019/09/17/bert-explained-a-complete-guide-with-theory-and-tutorial/</a></p>
-<p><img src="../images/bert_example.png" alt=""></p>
-
+<p><h1>Table of Contents<span class="tocSkip"></span></h1></p>
+<div class="toc"><ul class="toc-item"><li><span><a href="#Descriptions" data-toc-modified-id="Descriptions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Descriptions</a></span></li><li><span><a href="#Google-Colab" data-toc-modified-id="Google-Colab-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Google Colab</a></span></li><li><span><a href="#Load-the-libraries" data-toc-modified-id="Load-the-libraries-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Load the libraries</a></span></li><li><span><a href="#Useful-Functions" data-toc-modified-id="Useful-Functions-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Useful Functions</a></span></li><li><span><a href="#Data-Processing" data-toc-modified-id="Data-Processing-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Data Processing</a></span><ul class="toc-item"><li><span><a href="#Load-the-data" data-toc-modified-id="Load-the-data-5.1"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Load the data</a></span></li><li><span><a href="#parse-the-text:-whitespace-nlp-with-sentence" data-toc-modified-id="parse-the-text:-whitespace-nlp-with-sentence-5.2"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>parse the text: whitespace nlp with sentence</a></span></li><li><span><a href="#Create-corpus" data-toc-modified-id="Create-corpus-5.3"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Create corpus</a></span></li></ul></li><li><span><a href="#Positive-and-Negative-Tweets" data-toc-modified-id="Positive-and-Negative-Tweets-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>Positive and Negative Tweets</a></span></li><li><span><a href="#Visualizing-Phrase-associations" data-toc-modified-id="Visualizing-Phrase-associations-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Visualizing Phrase associations</a></span></li><li><span><a href="#Time-Taken" data-toc-modified-id="Time-Taken-8"><span class="toc-item-num">8&nbsp;&nbsp;</span>Time Taken</a></span></li></ul></div>
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Load-the-Libraries">Load the Libraries<a class="anchor-link" href="#Load-the-Libraries">&#182;</a></h1>
+<h1 id="Descriptions">Descriptions<a class="anchor-link" href="#Descriptions">&#182;</a></h1><ul>
+<li><a href="https://github.com/JasonKessler/scattertext#a-note-on-chart-layout">github: scattertext</a></li>
+</ul>
+
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">time_start_notebook</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Google-Colab">Google Colab<a class="anchor-link" href="#Google-Colab">&#182;</a></h1>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%capture</span>
@@ -14322,9 +14306,7 @@ BERT relies on a Transformer (the attention mechanism that learns contextual rel
 
 <span class="k">if</span> <span class="n">ENV_COLAB</span><span class="p">:</span>
     <span class="c1">## install modules</span>
-    <span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">tokenizers</span>
-    <span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">transformers</span>
-    <span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">scikit</span><span class="o">-</span><span class="n">plot</span>
+    <span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">scattertext</span>
 
     <span class="c1">## print</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Environment: Google Colaboratory.&#39;</span><span class="p">)</span>
@@ -14337,54 +14319,29 @@ BERT relies on a Transformer (the attention mechanism that learns contextual rel
 </div>
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Load-the-libraries">Load the libraries<a class="anchor-link" href="#Load-the-libraries">&#182;</a></h1>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[48]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">swifter</span>
 
-<span class="c1"># settings</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;max_colwidth&#39;</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;max_columns&#39;</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
-<span class="n">SEED</span> <span class="o">=</span> <span class="mi">100</span>
-
-<span class="c1"># ml</span>
-<span class="kn">import</span> <span class="nn">sklearn</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
-
-<span class="c1"># warnings</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-
-<span class="c1"># nlp</span>
-<span class="kn">import</span> <span class="nn">re</span>
-
-<span class="c1"># extra</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="n">tqdm</span><span class="o">.</span><span class="n">pandas</span><span class="p">()</span>
-
-<span class="c1"># deep learning</span>
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">tensorflow.keras.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
-<span class="kn">import</span> <span class="nn">keras</span>
-<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">LSTM</span><span class="p">,</span><span class="n">Dense</span><span class="p">,</span><span class="n">Bidirectional</span><span class="p">,</span><span class="n">Input</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">transformers</span>
-<span class="kn">import</span> <span class="nn">tokenizers</span>
-<span class="kn">from</span> <span class="nn">tokenizers</span> <span class="kn">import</span> <span class="n">BertWordPieceTokenizer</span>
+<span class="kn">import</span> <span class="nn">scattertext</span> <span class="k">as</span> <span class="nn">st</span>
 
 <span class="c1"># versions</span>
-<span class="n">pprint</span><span class="p">([(</span><span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>
-        <span class="p">[</span><span class="n">np</span><span class="p">,</span><span class="n">pd</span><span class="p">,</span><span class="n">sklearn</span><span class="p">,</span><span class="n">tf</span><span class="p">,</span><span class="n">keras</span><span class="p">,</span><span class="n">torch</span><span class="p">,</span><span class="n">transformers</span><span class="p">,</span><span class="n">tokenizers</span><span class="p">]])</span>
+<span class="kn">import</span> <span class="nn">watermark</span>
+<span class="o">%</span><span class="k">load_ext</span> watermark
+<span class="o">%</span><span class="k">watermark</span> -a &quot;Bhishan Poudel&quot; -d -v -m
+<span class="nb">print</span><span class="p">()</span>
+<span class="o">%</span><span class="k">watermark</span> -iv
 </pre></div>
 
      </div>
@@ -14404,14 +14361,31 @@ BERT relies on a Transformer (the attention mechanism that learns contextual rel
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>[(&#39;numpy&#39;, &#39;1.18.5&#39;),
- (&#39;pandas&#39;, &#39;1.0.5&#39;),
- (&#39;sklearn&#39;, &#39;0.22.2.post1&#39;),
- (&#39;tensorflow&#39;, &#39;2.3.0&#39;),
- (&#39;keras&#39;, &#39;2.4.3&#39;),
- (&#39;torch&#39;, &#39;1.6.0+cu101&#39;),
- (&#39;transformers&#39;, &#39;3.1.0&#39;),
- (&#39;tokenizers&#39;, &#39;0.8.1.rc2&#39;)]
+<pre>Author: Bhishan Poudel
+
+Python implementation: CPython
+Python version       : 3.7.9
+IPython version      : 7.19.0
+
+Compiler    : Clang 10.0.0 
+OS          : Darwin
+Release     : 19.6.0
+Machine     : x86_64
+Processor   : i386
+CPU cores   : 4
+Architecture: 64bit
+
+
+autopep8   : 1.5.4
+pandas     : 1.1.4
+scattertext: 0.0.2.75
+json       : 2.0.9
+numpy      : 1.19.4
+swifter    : 1.0.6
+sys        : 3.7.9 (default, Aug 31 2020, 07:22:35) 
+[Clang 10.0.0 ]
+watermark  : 2.1.0
+
 </pre>
 </div>
 </div>
@@ -14423,23 +14397,54 @@ BERT relies on a Transformer (the attention mechanism that learns contextual rel
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Load-the-dataset">Load the dataset<a class="anchor-link" href="#Load-the-dataset">&#182;</a></h1>
+<h1 id="Useful-Functions">Useful Functions<a class="anchor-link" href="#Useful-Functions">&#182;</a></h1>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://github.com/bhishanpdl/Datasets/blob/master/janatahack/sentiment_analysis/raw/train.csv?raw=true&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">show_methods</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">contains</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="s1">&#39;_&#39;</span> <span class="p">]</span>
+    <span class="k">if</span> <span class="n">contains</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lst</span> <span class="k">if</span> <span class="n">contains</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span><span class="n">ncols</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">1000</span><span class="p">]</span> <span class="c1"># to prevent OOM</span>
+     </div>
+</div>
+</div>
+</div>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;train : </span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Data-Processing">Data Processing<a class="anchor-link" href="#Data-Processing">&#182;</a></h1>
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Load-the-data">Load the data<a class="anchor-link" href="#Load-the-data">&#182;</a></h2>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">target_name</span> <span class="o">=</span> <span class="s1">&#39;label&#39;</span>
+<span class="n">mc</span> <span class="o">=</span> <span class="s1">&#39;tweet_clean&#39;</span> <span class="c1"># main column cleaned</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/bhishanpdl/Datasets/blob/master/AV_Hackathons/sentiment_analysis/processed/&#39;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="s1">&#39;df_combined_clean.csv?raw=true&#39;</span><span class="p">,</span>
+                 <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">target_name</span><span class="p">,</span><span class="n">mc</span><span class="p">])</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="mf">1.0</span><span class="p">:</span> <span class="s1">&#39;positive&#39;</span><span class="p">,</span><span class="mf">0.0</span><span class="p">:</span> <span class="s1">&#39;negative&#39;</span><span class="p">})</span>
+
 <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
-
-<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;label&#39;</span>
-<span class="n">maincol</span> <span class="o">=</span> <span class="s1">&#39;tweet&#39;</span>
 </pre></div>
 
      </div>
@@ -14451,18 +14456,6 @@ BERT relies on a Transformer (the attention mechanism that learns contextual rel
 
 
 <div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>train : (1000, 3)
-</pre>
-</div>
-</div>
 
 <div class="jp-OutputArea-child">
 
@@ -14492,33 +14485,33 @@ BERT relies on a Transformer (the attention mechanism that learns contextual rel
       <th></th>
       <th>id</th>
       <th>label</th>
-      <th>tweet</th>
+      <th>tweet_clean</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>1</td>
-      <td>0</td>
-      <td>#fingerprint #Pregnancy Test https://goo.gl/h1MfQV #android #apps #beautiful #cute #health #igers #iphoneonly #iphonesia #iphone</td>
+      <td>negative</td>
+      <td>fingerprint pregnancy test android aps beautif...</td>
     </tr>
     <tr>
       <th>1</th>
       <td>2</td>
-      <td>0</td>
-      <td>Finally a transparant silicon case ^^ Thanks to my uncle :) #yay #Sony #Xperia #S #sonyexperias… http://instagram.com/p/YGEt5JC6JM/</td>
+      <td>negative</td>
+      <td>finaly transparant silicon case thanks uncle y...</td>
     </tr>
     <tr>
-      <th>998</th>
-      <td>999</td>
-      <td>1</td>
-      <td>Idk if I should download Dead Nation and inFAMOUS and never play either one, or just not download anything #Sony #PSN #Playstation</td>
+      <th>7918</th>
+      <td>7919</td>
+      <td>negative</td>
+      <td>finaly got smart pocket wifi stay conected any...</td>
     </tr>
     <tr>
-      <th>999</th>
-      <td>1000</td>
-      <td>1</td>
-      <td>I've gone thru four iPhone chargers in 3 days #boss #badass</td>
+      <th>7919</th>
+      <td>7920</td>
+      <td>negative</td>
+      <td>aple barcelona aple store bcn barcelona travel...</td>
     </tr>
   </tbody>
 </table>
@@ -14534,301 +14527,16 @@ BERT relies on a Transformer (the attention mechanism that learns contextual rel
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Text-Data-Processing">Text Data Processing<a class="anchor-link" href="#Text-Data-Processing">&#182;</a></h1>
+<h2 id="parse-the-text:-whitespace-nlp-with-sentence">parse the text: whitespace nlp with sentence<a class="anchor-link" href="#parse-the-text:-whitespace-nlp-with-sentence">&#182;</a></h2>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">maincol</span> <span class="o">=</span> <span class="s1">&#39;tweet&#39;</span>
-<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;label&#39;</span>
-<span class="n">mc</span> <span class="o">=</span> <span class="n">maincol</span> <span class="o">+</span> <span class="s1">&#39;_clean&#39;</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="k">def</span> <span class="nf">process_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;[^&gt;]+&gt;&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="c1"># remove html tags</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[^a-zA-Z]&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span> <span class="c1"># keep only alpha</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+[a-zA-Z]\s+&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span> <span class="c1"># remove single letter</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span> <span class="c1"># remove multiple spaces</span>
-
-    <span class="k">return</span> <span class="n">out</span>
-
-<span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">maincol</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">s</span><span class="o">.</span><span class="n">progress_apply</span><span class="p">(</span><span class="n">process_text</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>100%|██████████| 1/1 [00:00&lt;00:00, 494.15it/s]
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>0    Finally transparant silicon case Thanks to my uncle yay Sony Xperia sonyexperias http instagram com YGEt JC JM 
-dtype: object</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">maincol</span><span class="p">]</span><span class="o">.</span><span class="n">progress_apply</span><span class="p">(</span><span class="n">process_text</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>100%|██████████| 1000/1000 [00:00&lt;00:00, 33723.32it/s]
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Train-Test-Split">Train Test Split<a class="anchor-link" href="#Train-Test-Split">&#182;</a></h1>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[56]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ser_Xtrain</span><span class="p">,</span> <span class="n">ser_Xtest</span><span class="p">,</span> <span class="n">ser_ytrain</span><span class="p">,</span> <span class="n">ser_ytest</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">mc</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="n">target</span><span class="p">],</span>
-                                                <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                                <span class="n">random_state</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
-                                                <span class="n">stratify</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
-
-<span class="n">Xtrain</span> <span class="o">=</span> <span class="n">ser_Xtrain</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-<span class="n">Xtest</span> <span class="o">=</span> <span class="n">ser_Xtest</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-
-<span class="n">ytrain</span> <span class="o">=</span> <span class="n">ser_ytrain</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-<span class="n">ytest</span> <span class="o">=</span> <span class="n">ser_ytest</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Tokenizing">Tokenizing<a class="anchor-link" href="#Tokenizing">&#182;</a></h1>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">transformers</span>
-<span class="kn">from</span> <span class="nn">tokenizers</span> <span class="kn">import</span> <span class="n">BertWordPieceTokenizer</span>
-
-<span class="n">class_tokenizer</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">DistilBertTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;distilbert-base-uncased&#39;</span> <span class="p">,</span>
-                                                             <span class="n">lower</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="c1"># Save the loaded tokenizer locally</span>
-<span class="n">class_tokenizer</span><span class="o">.</span><span class="n">save_pretrained</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-
-<span class="c1"># Reload it with the huggingface tokenizers library</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">BertWordPieceTokenizer</span><span class="p">(</span><span class="s1">&#39;vocab.txt&#39;</span><span class="p">,</span> <span class="n">lowercase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">tokenizer</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>Tokenizer(vocabulary_size=30522, model=BertWordPiece, unk_token=[UNK], sep_token=[SEP], cls_token=[CLS], pad_token=[PAD], mask_token=[MASK], clean_text=True, handle_chinese_chars=True, strip_accents=None, lowercase=True, wordpieces_prefix=##)</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[35]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># pprint([i for i in dir(tokenizer) if i[0]!=&#39;_&#39;],max_seq_len=80)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[36]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">do_encode</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">400</span><span class="p">):</span>
-
-    <span class="n">tokenizer</span><span class="o">.</span><span class="n">enable_truncation</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="n">maxlen</span><span class="p">)</span>
-    <span class="n">tokenizer</span><span class="o">.</span><span class="n">enable_padding</span><span class="p">()</span>
-    <span class="n">all_ids</span> <span class="o">=</span> <span class="p">[]</span>
-    
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">texts</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">):</span>
-        <span class="n">text_chunk</span> <span class="o">=</span> <span class="n">texts</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">chunk_size</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">encs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode_batch</span><span class="p">(</span><span class="n">text_chunk</span><span class="p">)</span>
-        <span class="n">all_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">enc</span><span class="o">.</span><span class="n">ids</span> <span class="k">for</span> <span class="n">enc</span> <span class="ow">in</span> <span class="n">encs</span><span class="p">])</span>
-    
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">all_ids</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[38]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Xtrain</span> <span class="o">=</span> <span class="n">do_encode</span><span class="p">(</span><span class="n">Xtrain</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
-<span class="n">Xtest</span> <span class="o">=</span> <span class="n">do_encode</span><span class="p">(</span><span class="n">Xtest</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[59]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span><span class="n">Dense</span>
-<span class="kn">from</span> <span class="nn">tensorflow.keras.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
-<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Model</span>
-
-<span class="k">def</span> <span class="nf">build_model</span><span class="p">(</span><span class="n">transformer</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="mi">400</span><span class="p">):</span>
-    <span class="n">input_word_ids</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">max_len</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_word_ids&quot;</span><span class="p">)</span>
-    <span class="n">sequence_output</span> <span class="o">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">input_word_ids</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">cls_token</span> <span class="o">=</span> <span class="n">sequence_output</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">)(</span><span class="n">cls_token</span><span class="p">)</span>
-
-    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">input_word_ids</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">2e-5</span><span class="p">),</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
-    
-    <span class="k">return</span> <span class="n">model</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[44]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bert_model</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">TFDistilBertModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;distilbert-base-uncased&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">parsed_col</span> <span class="o">=</span> <span class="s1">&#39;parse&#39;</span>
+<span class="n">df</span><span class="p">[</span><span class="n">parsed_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span><span class="o">.</span><span class="n">swifter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">whitespace_nlp_with_sentences</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14852,12 +14560,12 @@ dtype: object</pre>
 
 
 
-<div id="a2eff3b4-9f28-4b0e-8916-dbe795f246ca" class="jupyter-widgets jp-OutputArea-output ">
+<div id="3345c57b-df6d-4d96-a027-49bed3d638e9" class="jupyter-widgets jp-OutputArea-output ">
 <script type="text/javascript">
-var element = document.getElementById('a2eff3b4-9f28-4b0e-8916-dbe795f246ca');
+var element = document.getElementById('3345c57b-df6d-4d96-a027-49bed3d638e9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "9d711699cfb64f4ca19267428bf8aa41", "version_minor": 0, "version_major": 2}
+{"model_id": "25d347a7ecc94c0eb8c08d10ba4c93f4", "version_major": 2, "version_minor": 0}
 </script>
 </div>
 
@@ -14875,22 +14583,6 @@ var element = document.getElementById('a2eff3b4-9f28-4b0e-8916-dbe795f246ca');
 </div>
 </div>
 
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>Some weights of the model checkpoint at distilbert-base-uncased were not used when initializing TFDistilBertModel: [&#39;activation_13&#39;, &#39;vocab_transform&#39;, &#39;vocab_projector&#39;, &#39;vocab_layer_norm&#39;]
-- This IS expected if you are initializing TFDistilBertModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPretraining model).
-- This IS NOT expected if you are initializing TFDistilBertModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
-All the weights of TFDistilBertModel were initialized from the model checkpoint at distilbert-base-uncased.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use TFDistilBertModel for predictions without further training.
-</pre>
-</div>
-</div>
-
 </div>
 
 </div>
@@ -14898,11 +14590,10 @@ If your task is similar to the task the model of the checkpoint was trained on, 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[49]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">(</span><span class="n">bert_model</span><span class="p">,</span> <span class="n">max_len</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 </pre></div>
 
      </div>
@@ -14918,135 +14609,7 @@ If your task is similar to the task the model of the checkpoint was trained on, 
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Model: &#34;functional_1&#34;
-_________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-input_word_ids (InputLayer)  [(None, 400)]             0         
-_________________________________________________________________
-tf_distil_bert_model (TFDist ((None, 400, 768),)       66362880  
-_________________________________________________________________
-tf_op_layer_strided_slice_1  [(None, 768)]             0         
-_________________________________________________________________
-dense_1 (Dense)              (None, 1)                 769       
-=================================================================
-Total params: 66,363,649
-Trainable params: 66,363,649
-Non-trainable params: 0
-_________________________________________________________________
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[52]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Xtest</span><span class="p">)</span>
-<span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Model-Evaluation">Model Evaluation<a class="anchor-link" href="#Model-Evaluation">&#182;</a></h1>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[53]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_predict</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[64]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_eval</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Text Model&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="s1">&#39;Params&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="s1">&#39;Model&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="s1">&#39;Description&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="s1">&#39;Accuracy&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="s1">&#39;Precision&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="s1">&#39;Recall&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="s1">&#39;F1&#39;</span><span class="p">:</span> <span class="p">[],</span>
-<span class="p">})</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[65]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">text_model_name</span> <span class="o">=</span> <span class="s2">&quot;distilbert&quot;</span>
-<span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;distilbert-base-uncased&quot;</span>
-<span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;keras&quot;</span>
-<span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;dense layer=1, Adam(lr=2e-5)&quot;</span>
-
-<span class="n">Xvd</span> <span class="o">=</span> <span class="n">Xtest</span>
-<span class="n">yvd</span> <span class="o">=</span> <span class="n">ytest</span>
-<span class="n">vd_preds</span> <span class="o">=</span> <span class="n">y_pred</span>
-
-<span class="n">acc</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">yvd</span><span class="p">,</span><span class="n">vd_preds</span><span class="p">)</span>
-<span class="n">pre</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">precision_score</span><span class="p">(</span><span class="n">yvd</span><span class="p">,</span><span class="n">vd_preds</span><span class="p">)</span>
-<span class="n">rec</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">yvd</span><span class="p">,</span><span class="n">vd_preds</span><span class="p">)</span>
-<span class="n">f1</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">f1_score</span><span class="p">(</span><span class="n">yvd</span><span class="p">,</span><span class="n">vd_preds</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="s1">&#39;weighted&#39;</span><span class="p">)</span>
-
-<span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="n">text_model_name</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span><span class="n">desc</span><span class="p">]</span>
-<span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="p">[</span><span class="n">acc</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">rec</span><span class="p">,</span> <span class="n">f1</span><span class="p">]</span>
-
-<span class="n">df_eval</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">df_eval</span><span class="p">)]</span> <span class="o">=</span> <span class="n">row</span>
-<span class="n">df_eval</span> <span class="o">=</span> <span class="n">df_eval</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Text Model&#39;</span><span class="p">,</span> <span class="s1">&#39;Params&#39;</span><span class="p">,</span> <span class="s1">&#39;Model&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">])</span>
-
-<span class="n">df_eval</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[65]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 
 
 
@@ -15069,27 +14632,198 @@ _________________________________________________________________
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Text Model</th>
-      <th>Params</th>
-      <th>Model</th>
-      <th>Description</th>
-      <th>Accuracy</th>
-      <th>Precision</th>
-      <th>Recall</th>
-      <th>F1</th>
+      <th>id</th>
+      <th>label</th>
+      <th>tweet_clean</th>
+      <th>parse</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>distilbert</td>
-      <td>distilbert-base-uncased</td>
-      <td>keras</td>
-      <td>dense layer=1, Adam(lr=2e-5)</td>
-      <td>0.684</td>
-      <td>0.318182</td>
-      <td>0.222222</td>
-      <td>0.663583</td>
+      <td>1</td>
+      <td>negative</td>
+      <td>fingerprint pregnancy test android aps beautif...</td>
+      <td>(fingerprint, pregnancy, test, android, aps, b...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>negative</td>
+      <td>finaly transparant silicon case thanks uncle y...</td>
+      <td>(finaly, transparant, silicon, case, thanks, u...</td>
+    </tr>
+    <tr>
+      <th>7918</th>
+      <td>7919</td>
+      <td>negative</td>
+      <td>finaly got smart pocket wifi stay conected any...</td>
+      <td>(finaly, got, smart, pocket, wifi, stay, conec...</td>
+    </tr>
+    <tr>
+      <th>7919</th>
+      <td>7920</td>
+      <td>negative</td>
+      <td>aple barcelona aple store bcn barcelona travel...</td>
+      <td>(aple, barcelona, aple, store, bcn, barcelona,...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Create-corpus">Create corpus<a class="anchor-link" href="#Create-corpus">&#182;</a></h2>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">corpus</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">CorpusFromParsedDocuments</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="n">category_col</span><span class="o">=</span><span class="n">target_name</span><span class="p">,</span> 
+    <span class="n">parsed_col</span><span class="o">=</span><span class="n">parsed_col</span>
+    <span class="p">)</span>
+
+<span class="n">corpus</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">corpus</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">get_unigram_corpus</span><span class="p">()</span>
+
+<span class="c1"># reduce size</span>
+<span class="n">corpus</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">compact</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">AssociationCompactor</span><span class="p">(</span><span class="mi">2000</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Positive-and-Negative-Tweets">Positive and Negative Tweets<a class="anchor-link" href="#Positive-and-Negative-Tweets">&#182;</a></h1>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">html</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">produce_scattertext_explorer</span><span class="p">(</span>
+    <span class="n">corpus</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span>
+    <span class="n">category_name</span><span class="o">=</span><span class="s1">&#39;Negative&#39;</span><span class="p">,</span>
+    <span class="n">not_category_name</span><span class="o">=</span><span class="s1">&#39;Positive&#39;</span><span class="p">,</span>
+    <span class="n">minimum_term_frequency</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">pmi_threshold_coefficient</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">width_in_pixels</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="n">corpus</span><span class="o">.</span><span class="n">get_df</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">Scalers</span><span class="o">.</span><span class="n">dense_rank</span>
+    <span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../outputs/tweets_sentiment.html&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
+    <span class="n">fo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Visualizing-Phrase-associations">Visualizing Phrase associations<a class="anchor-link" href="#Visualizing-Phrase-associations">&#182;</a></h1><p>First download english words.</p>
+<div class="highlight"><pre><span></span><span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">poudel</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">nlp</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">spacy</span> <span class="n">download</span> <span class="n">en</span>
+</pre></div>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>label</th>
+      <th>tweet_clean</th>
+      <th>parse</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>negative</td>
+      <td>fingerprint pregnancy test android aps beautif...</td>
+      <td>(fingerprint, pregnancy, test, android, aps, b...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>negative</td>
+      <td>finaly transparant silicon case thanks uncle y...</td>
+      <td>(finaly, transparant, silicon, case, thanks, u...</td>
     </tr>
   </tbody>
 </table>
@@ -15105,15 +14839,518 @@ _________________________________________________________________
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+
+
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;en&#39;</span><span class="p">)</span>
 </pre></div>
 
      </div>
 </div>
 </div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># %%time</span>
+
+<span class="c1">## add new column (or replace) called parse</span>
+<span class="c1"># df = df.assign(parse=lambda row: row[mc].apply(nlp))</span>
+
+<span class="c1">## Wall time: 48 s</span>
+<span class="c1">## this is fast but it does not have progress bar.</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;parse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span><span class="o">.</span><span class="n">swifter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">nlp</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+
+
+
+
+<div id="879ec9a0-387d-41c2-99be-08653c32d7cd" class="jupyter-widgets jp-OutputArea-output ">
+<script type="text/javascript">
+var element = document.getElementById('879ec9a0-387d-41c2-99be-08653c32d7cd');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "047e5f373bec4f0888541c274ae8cf46", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>
+CPU times: user 52 s, sys: 595 ms, total: 52.6 s
+Wall time: 54.9 s
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>label</th>
+      <th>tweet_clean</th>
+      <th>parse</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>negative</td>
+      <td>fingerprint pregnancy test android aps beautif...</td>
+      <td>(fingerprint, pregnancy, test, android, aps, b...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>negative</td>
+      <td>finaly transparant silicon case thanks uncle y...</td>
+      <td>(finaly, transparant, silicon, case, thanks, u...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;parse&#39;</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>fingerprint pregnancy test android aps beautiful cute health igers iphoneonly iphonesia iphone</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+<span class="n">corpus</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">CorpusFromParsedDocuments</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="n">category_col</span><span class="o">=</span><span class="n">target_name</span><span class="p">,</span>
+    <span class="n">parsed_col</span><span class="o">=</span><span class="s1">&#39;parse&#39;</span><span class="p">,</span>
+    <span class="n">feats_from_spacy_doc</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">PyTextRankPhrases</span><span class="p">()</span>
+<span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
+<span class="p">)</span><span class="o">.</span><span class="n">compact</span><span class="p">(</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">AssociationCompactor</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">use_non_text_features</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>/Users/poudel/opt/miniconda3/envs/nlp/lib/python3.7/site-packages/scattertext/termscoring/ScaledFScore.py:129: RuntimeWarning: invalid value encountered in true_divide
+  precision = (cat_word_counts * 1. / (cat_word_counts + not_cat_word_counts))
+/Users/poudel/opt/miniconda3/envs/nlp/lib/python3.7/site-packages/scattertext/termscoring/ScaledFScore.py:129: RuntimeWarning: invalid value encountered in true_divide
+  precision = (cat_word_counts * 1. / (cat_word_counts + not_cat_word_counts))
+</pre>
+</div>
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>CPU times: user 13.3 s, sys: 85.4 ms, total: 13.4 s
+Wall time: 13.7 s
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_term_category_scores</span> <span class="o">=</span> <span class="n">corpus</span><span class="o">.</span><span class="n">get_metadata_freq_df</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">df_term_category_scores</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>negative</th>
+      <th>positive</th>
+    </tr>
+    <tr>
+      <th>term</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>iphonesia</th>
+      <td>8.928064</td>
+      <td>0.154059</td>
+    </tr>
+    <tr>
+      <th>love</th>
+      <td>5.211916</td>
+      <td>0.831196</td>
+    </tr>
+    <tr>
+      <th>way</th>
+      <td>0.449481</td>
+      <td>0.128470</td>
+    </tr>
+    <tr>
+      <th>phone big time</th>
+      <td>0.000000</td>
+      <td>0.251077</td>
+    </tr>
+    <tr>
+      <th>new year</th>
+      <td>4.943526</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>sun instagod boy</th>
+      <td>0.403745</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>picoftheday</th>
+      <td>14.308220</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>new ipod</th>
+      <td>0.000000</td>
+      <td>1.126512</td>
+    </tr>
+    <tr>
+      <th>saturday</th>
+      <td>5.385685</td>
+      <td>0.126068</td>
+    </tr>
+    <tr>
+      <th>phone case</th>
+      <td>0.867800</td>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Get the rank of each term in each category</span>
+<span class="n">term_ranks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">df_term_category_scores</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="c1"># Text displayed when a term is clicked</span>
+<span class="n">metadata_descriptions</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">term</span><span class="p">:</span> <span class="s1">&#39;&lt;br/&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;&lt;br/&gt;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="s1">&#39;&lt;b&gt;</span><span class="si">%s</span><span class="s1">&lt;/b&gt; TextRank score rank: </span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">term_ranks</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">term</span><span class="p">,</span> <span class="n">cat</span><span class="p">],</span> <span class="n">corpus</span><span class="o">.</span><span class="n">get_num_metadata</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">corpus</span><span class="o">.</span><span class="n">get_categories</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">corpus</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">category_specific_prominence</span> <span class="o">=</span> <span class="n">df_term_category_scores</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">negative</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">negative</span> <span class="o">&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">positive</span> <span class="k">else</span> <span class="o">-</span><span class="n">r</span><span class="o">.</span><span class="n">positive</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">html</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">produce_scattertext_explorer</span><span class="p">(</span>
+    <span class="n">corpus</span><span class="p">,</span>
+    <span class="n">category</span><span class="o">=</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span>
+    <span class="n">not_category_name</span><span class="o">=</span><span class="s1">&#39;positive&#39;</span><span class="p">,</span>
+    <span class="n">minimum_term_frequency</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">pmi_threshold_coefficient</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">width_in_pixels</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">transform</span><span class="o">=</span><span class="n">st</span><span class="o">.</span><span class="n">dense_rank</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="n">corpus</span><span class="o">.</span><span class="n">get_df</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+    <span class="n">scores</span><span class="o">=</span><span class="n">category_specific_prominence</span><span class="p">,</span>
+    <span class="n">sort_by_dist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">use_non_text_features</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">topic_model_term_lists</span><span class="o">=</span><span class="p">{</span><span class="n">term</span><span class="p">:</span> <span class="p">[</span><span class="n">term</span><span class="p">]</span> <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">corpus</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">()},</span>
+    <span class="n">topic_model_preview_size</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">metadata_descriptions</span><span class="o">=</span><span class="n">metadata_descriptions</span><span class="p">,</span>
+    <span class="n">use_full_doc</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../outputs/tweets_sentiment_textrank.html&#39;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
+    <span class="n">fo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Time-Taken">Time Taken<a class="anchor-link" href="#Time-Taken">&#182;</a></h1>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">time_taken</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">time_start_notebook</span>
+<span class="n">h</span><span class="p">,</span><span class="n">m</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">time_taken</span><span class="p">,</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time taken to run whole notebook: </span><span class="si">{:.0f}</span><span class="s1"> hr &#39;</span>\
+      <span class="s1">&#39;</span><span class="si">{:.0f}</span><span class="s1"> min </span><span class="si">{:.0f}</span><span class="s1"> secs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="o">*</span><span class="nb">divmod</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="mi">60</span><span class="p">)))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Time taken to run whole notebook: 0 hr 1 min 18 secs
+</pre>
+</div>
+</div>
+
+</div>
+
 </div>
 
 </div>
@@ -15123,10 +15360,6 @@ _________________________________________________________________
 
 
 
-
-<script type="application/vnd.jupyter.widget-state+json">
-{"9d711699cfb64f4ca19267428bf8aa41": {"model_module": "@jupyter-widgets/controls", "model_name": "HBoxModel", "state": {"_view_name": "HBoxView", "_dom_classes": [], "_model_name": "HBoxModel", "_view_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_view_count": null, "_view_module_version": "1.5.0", "box_style": "", "layout": "IPY_MODEL_1e6ab8710d0f43e2bf49fd7d54f3bb44", "_model_module": "@jupyter-widgets/controls", "children": ["IPY_MODEL_9a418865afd14790871c464713ca21c3", "IPY_MODEL_213cf0371b3145348139876f300e3aa8"]}}, "1e6ab8710d0f43e2bf49fd7d54f3bb44": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "state": {"_view_name": "LayoutView", "grid_template_rows": null, "right": null, "justify_content": null, "_view_module": "@jupyter-widgets/base", "overflow": null, "_model_module_version": "1.2.0", "_view_count": null, "flex_flow": null, "width": null, "min_width": null, "border": null, "align_items": null, "bottom": null, "_model_module": "@jupyter-widgets/base", "top": null, "grid_column": null, "overflow_y": null, "overflow_x": null, "grid_auto_flow": null, "grid_area": null, "grid_template_columns": null, "flex": null, "_model_name": "LayoutModel", "justify_items": null, "grid_row": null, "max_height": null, "align_content": null, "visibility": null, "align_self": null, "height": null, "min_height": null, "padding": null, "grid_auto_rows": null, "grid_gap": null, "max_width": null, "order": null, "_view_module_version": "1.2.0", "grid_template_areas": null, "object_position": null, "object_fit": null, "grid_auto_columns": null, "margin": null, "display": null, "left": null}}, "9a418865afd14790871c464713ca21c3": {"model_module": "@jupyter-widgets/controls", "model_name": "FloatProgressModel", "state": {"_view_name": "ProgressView", "style": "IPY_MODEL_76d42f03548e4c78af2cc3319c7d8dd3", "_dom_classes": [], "description": "Downloading: 100%", "_model_name": "FloatProgressModel", "bar_style": "success", "max": 363423424, "_view_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "value": 363423424, "_view_count": null, "_view_module_version": "1.5.0", "orientation": "horizontal", "min": 0, "description_tooltip": null, "_model_module": "@jupyter-widgets/controls", "layout": "IPY_MODEL_22a8e7a3b1334175bcb1a232d9424b12"}}, "213cf0371b3145348139876f300e3aa8": {"model_module": "@jupyter-widgets/controls", "model_name": "HTMLModel", "state": {"_view_name": "HTMLView", "style": "IPY_MODEL_556ed37ce16e4c8f9a47181c4b7a8eb7", "_dom_classes": [], "description": "", "_model_name": "HTMLModel", "placeholder": "\u200b", "_view_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "value": " 363M/363M [00:23&lt;00:00, 15.2MB/s]", "_view_count": null, "_view_module_version": "1.5.0", "description_tooltip": null, "_model_module": "@jupyter-widgets/controls", "layout": "IPY_MODEL_2d8adf415d8549d289d1e7b010624a1e"}}, "76d42f03548e4c78af2cc3319c7d8dd3": {"model_module": "@jupyter-widgets/controls", "model_name": "ProgressStyleModel", "state": {"_view_name": "StyleView", "_model_name": "ProgressStyleModel", "description_width": "initial", "_view_module": "@jupyter-widgets/base", "_model_module_version": "1.5.0", "_view_count": null, "_view_module_version": "1.2.0", "bar_color": null, "_model_module": "@jupyter-widgets/controls"}}, "22a8e7a3b1334175bcb1a232d9424b12": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "state": {"_view_name": "LayoutView", "grid_template_rows": null, "right": null, "justify_content": null, "_view_module": "@jupyter-widgets/base", "overflow": null, "_model_module_version": "1.2.0", "_view_count": null, "flex_flow": null, "width": null, "min_width": null, "border": null, "align_items": null, "bottom": null, "_model_module": "@jupyter-widgets/base", "top": null, "grid_column": null, "overflow_y": null, "overflow_x": null, "grid_auto_flow": null, "grid_area": null, "grid_template_columns": null, "flex": null, "_model_name": "LayoutModel", "justify_items": null, "grid_row": null, "max_height": null, "align_content": null, "visibility": null, "align_self": null, "height": null, "min_height": null, "padding": null, "grid_auto_rows": null, "grid_gap": null, "max_width": null, "order": null, "_view_module_version": "1.2.0", "grid_template_areas": null, "object_position": null, "object_fit": null, "grid_auto_columns": null, "margin": null, "display": null, "left": null}}, "556ed37ce16e4c8f9a47181c4b7a8eb7": {"model_module": "@jupyter-widgets/controls", "model_name": "DescriptionStyleModel", "state": {"_view_name": "StyleView", "_model_name": "DescriptionStyleModel", "description_width": "", "_view_module": "@jupyter-widgets/base", "_model_module_version": "1.5.0", "_view_count": null, "_view_module_version": "1.2.0", "_model_module": "@jupyter-widgets/controls"}}, "2d8adf415d8549d289d1e7b010624a1e": {"model_module": "@jupyter-widgets/base", "model_name": "LayoutModel", "state": {"_view_name": "LayoutView", "grid_template_rows": null, "right": null, "justify_content": null, "_view_module": "@jupyter-widgets/base", "overflow": null, "_model_module_version": "1.2.0", "_view_count": null, "flex_flow": null, "width": null, "min_width": null, "border": null, "align_items": null, "bottom": null, "_model_module": "@jupyter-widgets/base", "top": null, "grid_column": null, "overflow_y": null, "overflow_x": null, "grid_auto_flow": null, "grid_area": null, "grid_template_columns": null, "flex": null, "_model_name": "LayoutModel", "justify_items": null, "grid_row": null, "max_height": null, "align_content": null, "visibility": null, "align_self": null, "height": null, "min_height": null, "padding": null, "grid_auto_rows": null, "grid_gap": null, "max_width": null, "order": null, "_view_module_version": "1.2.0", "grid_template_areas": null, "object_position": null, "object_fit": null, "grid_auto_columns": null, "margin": null, "display": null, "left": null}}}
-</script>
 
 
 </html>

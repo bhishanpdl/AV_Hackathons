@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="introduction">Introduction</h1>
+<p>In this project, I took the data from <a href="https://datahack.analyticsvidhya.com/contest/all/">Analytics Vidhya Hackathon: Identify the sentiments</a>. This is an online competition platform for data science projects and in this NLP project I achieved the position on 12th among thousands of participants.</p>
+<pre class="hljs"><code><div>Example tweet:
+#fingerprint #Pregnancy Test https://goo.gl/h1MfQV #android #apps #beautiful #cute #health #igers #iphoneonly #iphonesia #iphone
+
+Cleaned text:
+fingerprint pregnancy test android aps beautiful cute health igers iphoneonly iphonesia iphone
+
+hashtags:
+#fingerprint #Pregnancy #android #apps #beautiful #cute #health #igers #iphoneonly #iphonesia #iphone
+
+
+We have 7920 training tweets.
+We also have 1953 test tweets without label. (we need to upload the test predictions to get the weighted F1 score.)
+</div></code></pre>
+<h1 id="model-comparisons">Model Comparisons</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Notebook</th>
+<th style="text-align:center">Valid F1</th>
+<th style="text-align:right">Test F1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">b01_sentiment_analysis_modelling_bow_word2vec_tfidf</td>
+<td style="text-align:center">0.885101</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:left">b02_sentiment_analysis_modelling_tfidf</td>
+<td style="text-align:center">0.876263</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:left">---</td>
+<td style="text-align:center">---</td>
+<td style="text-align:right">---</td>
+</tr>
+<tr>
+<td style="text-align:left">c01_sentiment_analysis_ktrain</td>
+<td style="text-align:center">0.88</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:left">c01b_sentiment_analysis_ktrain_neptune</td>
+<td style="text-align:center">0.924609</td>
+<td style="text-align:right">0.907575</td>
+</tr>
+<tr>
+<td style="text-align:left">c01c_sentiment_analysis_ktrain_neptune_hpo</td>
+<td style="text-align:center">0.917368</td>
+<td style="text-align:right">0.877973</td>
+</tr>
+<tr>
+<td style="text-align:left">c02_sentiment_analysis_simpletransformers_wandb_roberta_full_data</td>
+<td style="text-align:center"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:left">---</td>
+<td style="text-align:center">---</td>
+<td style="text-align:right">---</td>
+</tr>
+<tr>
+<td style="text-align:left">d01_sentiment_analysis_keras_lstm</td>
+<td style="text-align:center">0.860</td>
+<td style="text-align:right">0.83785</td>
+</tr>
+<tr>
+<td style="text-align:left">d02_sentiment_analysis_keras_gru_gbru</td>
+<td style="text-align:center">0.871895</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:left">---</td>
+<td style="text-align:center">---</td>
+<td style="text-align:right">---</td>
+</tr>
+<tr>
+<td style="text-align:left">e01_sentiment_analysis_small_data_transformers_distilbert_torch</td>
+<td style="text-align:center">0.9120</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:left">e02_sentiment_analysis_transformers_distilbert_keras</td>
+<td style="text-align:center">0.663583</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:left">e03_sentiment_analysis_bert_tf2</td>
+<td style="text-align:center">0.884748</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:left">e03b_sentiment_analysis_bert_tf2_neptune</td>
+<td style="text-align:center">0.8787</td>
+<td style="text-align:right"></td>
+</tr>
+</tbody>
+</table>
+<h1 id="text-analysis-and-visualization">Text Analysis and Visualization</h1>
+<ul>
+<li>First do data cleaning.</li>
+<li>PCA plot. (dimension reduction)</li>
+<li>Most frequent words for positive and negative sentiment tweets.</li>
+<li>Wordcloud</li>
+<li>Treemap</li>
+<li>kde plots for +ve and -ve sentiments for new added features.</li>
+<li>n-grams</li>
+</ul>
+<h1 id="classical-methods">Classical Methods</h1>
+<ul>
+<li>We need data cleaning and feature creation.</li>
+<li>Embedding: BoW (CountVectorizer), TF-IDF, Word2Vec</li>
+<li>Algorithms: LogisticRegression, LinearSVC.</li>
+</ul>
+<p><img src="images/results_classical.png" alt="">
+<img src="images/results_classical2.png" alt=""></p>
+<h1 id="deep-learning-lstm-gru">Deep Learning: LSTM, GRU</h1>
+<ul>
+<li>First we do text processing.</li>
+<li>Prepare data using keras text processing tools <code>Tokenizer</code> and <code>sequence</code>.</li>
+<li>Keras sequential model using LSTM</li>
+<li>Keras sequential model using GRU</li>
+</ul>
+<h1 id="advanced-method-using-module-ktrain">Advanced method: Using module ktrain</h1>
+<ul>
+<li>
+<p>We don't need data cleaning.</p>
+</li>
+<li>
+<p>supports <code>'fasttext' 'nbsvm' 'logreg'  'bigru'  'bert' 'distilbert'</code>.</p>
+</li>
+</ul>
+<pre class="hljs"><code><div>best_so_far = <span class="hljs-string">"""
+bert lr=2e-5 epochs=5 ngram_range=1 maxlen=300
+f1 = 0.908687336005899
+
+n_gram=2 gave worse result
+tweet_clean_emoji gave worse result
+
+bert lr=2e-5 epochs=5 ngram_range=1 maxlen=400
+f1 = 0.908265806079951
+
+bert lr=2e-5 epochs=5 ngram_range=1 maxlen=300 maincol=tweet_clean
+f1=0.877973006703751
+
+"""</span>
+</div></code></pre>
+<h2 id="advanced-method-using-module-simpletransformers">Advanced Method: Using module simpletransformers</h2>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> simpletransformers.classification <span class="hljs-keyword">import</span> ClassificationModel
+
+model_type = <span class="hljs-string">'xlnet'</span>
+model_name = <span class="hljs-string">'xlnet-base-cased'</span>
+
+model = ClassificationModel(model_type, model_name, args=train_args)
+model.train_model(df_train, eval_df=<span class="hljs-literal">None</span>)
+
+test_preds, _, = model.predict(df_test[<span class="hljs-string">'tweet'</span>].to_numpy())
+</div></code></pre>
+
+</body>
+</html>

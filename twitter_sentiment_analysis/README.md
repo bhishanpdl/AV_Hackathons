@@ -67,6 +67,32 @@ We also have 1953 test tweets without label. (we need to upload the test predict
 - supports `'fasttext' 'nbsvm' 'logreg'  'bigru'  'bert' 'distilbert'`.
 
 ```python
+(X_train, y_train), (X_valid, y_valid), preproc = \
+ktrain.text.texts_from_df(df_train,
+    text_column=maincol,
+    label_columns=[target],
+    random_state=SEED,
+    ngram_range=1,
+    max_features=20000,
+    val_df = None, # if not 10% of train is used
+    maxlen=500,
+    preprocess_mode='bert')
+
+model = ktrain.text.text_classifier(name='bert',
+                             train_data=(X_train, y_train),
+                             metrics=['accuracy'],
+                             preproc=preproc)
+
+learner = ktrain.get_learner(model=model,
+                             train_data=(X_train, y_train),
+                             val_data=(X_valid, y_valid),
+                             batch_size=6)
+
+
+
+predictor = ktrain.get_predictor(learner.model, preproc)
+test_preds = predictor.predict(X_test,return_proba=False)
+
 best_so_far = """
 bert lr=2e-5 epochs=5 ngram_range=1 maxlen=300
 f1 = 0.908687336005899

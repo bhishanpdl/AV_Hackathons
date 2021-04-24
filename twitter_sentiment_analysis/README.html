@@ -501,7 +501,33 @@ We also have 1953 test tweets without label. (we need to upload the test predict
 <p>supports <code>'fasttext' 'nbsvm' 'logreg'  'bigru'  'bert' 'distilbert'</code>.</p>
 </li>
 </ul>
-<pre class="hljs"><code><div>best_so_far = <span class="hljs-string">"""
+<pre class="hljs"><code><div>(X_train, y_train), (X_valid, y_valid), preproc = \
+ktrain.text.texts_from_df(df_train,
+    text_column=maincol,
+    label_columns=[target],
+    random_state=SEED,
+    ngram_range=<span class="hljs-number">1</span>,
+    max_features=<span class="hljs-number">20000</span>,
+    val_df = <span class="hljs-literal">None</span>, <span class="hljs-comment"># if not 10% of train is used</span>
+    maxlen=<span class="hljs-number">500</span>,
+    preprocess_mode=<span class="hljs-string">'bert'</span>)
+
+model = ktrain.text.text_classifier(name=<span class="hljs-string">'bert'</span>,
+                             train_data=(X_train, y_train),
+                             metrics=[<span class="hljs-string">'accuracy'</span>],
+                             preproc=preproc)
+
+learner = ktrain.get_learner(model=model,
+                             train_data=(X_train, y_train),
+                             val_data=(X_valid, y_valid),
+                             batch_size=<span class="hljs-number">6</span>)
+
+
+
+predictor = ktrain.get_predictor(learner.model, preproc)
+test_preds = predictor.predict(X_test,return_proba=<span class="hljs-literal">False</span>)
+
+best_so_far = <span class="hljs-string">"""
 bert lr=2e-5 epochs=5 ngram_range=1 maxlen=300
 f1 = 0.908687336005899
 

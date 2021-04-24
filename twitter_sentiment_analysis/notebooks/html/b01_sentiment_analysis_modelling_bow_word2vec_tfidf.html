@@ -14358,7 +14358,6 @@ a.anchor-link {
 <span class="c1">#=====Warnigns</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
-<span class="c1"># plottig warnings</span>
 </pre></div>
 
      </div>
@@ -15062,7 +15061,17 @@ ser_yvalid     : (1584,)
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="BoW-(CountVectorizer)">BoW (CountVectorizer)<a class="anchor-link" href="#BoW-(CountVectorizer)">&#182;</a></h2>
+<h2 id="BoW-(CountVectorizer)">BoW (CountVectorizer)<a class="anchor-link" href="#BoW-(CountVectorizer)">&#182;</a></h2><ul>
+<li>Machine learning algorithms can not work with text.</li>
+<li>We need to convert text to numbers, which is called vectorization</li>
+<li>Various vectorizers are: <code>CountVectorizer</code>, <code>TfidfVecorizer</code></li>
+<li>We can also use Word2Vec method using spacy.nlp and convert words to vectors.</li>
+</ul>
+<ul>
+<li>More advanced methods are Transformer methods (eg. huggingface library)</li>
+<li>Simplified modules eg. <code>ktrain</code>, <code>simpletransformers</code></li>
+</ul>
+
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -15993,7 +16002,38 @@ Wall time: 55.4 s
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Tf-idf">Tf-idf<a class="anchor-link" href="#Tf-idf">&#182;</a></h2>
+<h2 id="Tf-idf">Tf-idf<a class="anchor-link" href="#Tf-idf">&#182;</a></h2><p><strong>Term Frequency</strong> : This gives how often a given word appears within a document.</p>
+<p>$\mathrm{TF}=\frac{\text { Number of times the term appears in the doc }}{\text { Total number of words in the doc }}$</p>
+<p><strong>Inverse Document Frequency</strong>: This gives how often the word appers across the documents.
+If a term is very common among documents (e.g., “the”, “a”, “is”),
+then we have low IDF score.</p>
+<p>$\mathrm{IDF}=\ln \left(\frac{\text { Number of docs }}{\text { Number docs the term appears in }}\right)$</p>
+<p><strong>Term Frequency – Inverse Document Frequency TF-IDF</strong>: 
+TF-IDF is the product of the TF and IDF scores of the term.</p>
+<p>$\mathrm{TF}\mathrm{IDF}=\mathrm{TF} * \mathrm{IDF}$</p>
+<p>In machine learning, TF-IDF is obtained from the class <code>TfidfVectorizer</code>.
+It has following parameters:</p>
+<ul>
+<li><code>min_df</code>: remove the words from the vocabulary which have occurred in less than "min_df"
+number of files.</li>
+<li><code>max_df</code>: remove the words from the vocabulary which have occurred in more than _{ maxdf" }
+total number of files in corpus.</li>
+<li><code>sublinear_tf</code>: set to True to scale the term frequency in logarithmic scale.</li>
+<li><code>stop_words</code>: remove the predefined stop words in 'english':</li>
+<li><code>use_idf</code>: weight factor must use inverse document frequency.</li>
+<li><code>ngram_range</code>: (1,2) to indicate that unigrams and bigrams will be considered.</li>
+</ul>
+<p>NOTE:</p>
+<ul>
+<li><code>TF</code> is same in sklearn and textbook but <code>IDF</code> if different (to address divide by zero problem)</li>
+<li><p>Ref: <a href="https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction">https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction</a></p>
+</li>
+<li><p>Here, <code>df(t)</code> is  is the number of documents in the document set that contain term t in it.
+<img src="images/tfidf_sklearn.png" alt="">
+<img src="images/tfidf_flashcards.png" alt=""></p>
+</li>
+</ul>
+
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">

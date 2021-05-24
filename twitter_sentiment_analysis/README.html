@@ -552,6 +552,131 @@ model = ClassificationModel(model_type, model_name, args=train_args)
 model.train_model(df_train, eval_df=<span class="hljs-literal">None</span>)
 
 test_preds, _, = model.predict(df_test[<span class="hljs-string">'tweet'</span>].to_numpy())
+
+<span class="hljs-comment"># Here, train_args is following:</span>
+train_args = {
+    <span class="hljs-string">"reprocess_input_data"</span>: <span class="hljs-literal">True</span>,
+    <span class="hljs-string">"overwrite_output_dir"</span>: <span class="hljs-literal">True</span>,
+    <span class="hljs-string">"use_cached_eval_features"</span>: <span class="hljs-literal">True</span>,
+    <span class="hljs-string">"output_dir"</span>: <span class="hljs-string">f"outputs/<span class="hljs-subst">{model_type}</span>"</span>,
+    <span class="hljs-string">"best_model_dir"</span>: <span class="hljs-string">f"outputs/<span class="hljs-subst">{model_type}</span>/best_model"</span>,
+    <span class="hljs-string">"train_batch_size"</span>: <span class="hljs-number">128</span>, <span class="hljs-comment"># it was 128</span>
+    <span class="hljs-string">"max_seq_length"</span>: <span class="hljs-number">128</span>, <span class="hljs-comment"># 256 gives OOM</span>
+    <span class="hljs-string">"num_train_epochs"</span>: <span class="hljs-number">3</span>,
+
+    <span class="hljs-comment"># evaluation</span>
+    <span class="hljs-string">"evaluate_during_training"</span>: <span class="hljs-literal">False</span>,
+    <span class="hljs-string">"evaluate_during_training_steps"</span>: <span class="hljs-number">1000</span>,
+    <span class="hljs-string">"save_model_every_epoch"</span>: <span class="hljs-literal">False</span>,
+    <span class="hljs-string">"save_eval_checkpoints"</span>: <span class="hljs-literal">False</span>,
+    <span class="hljs-string">"eval_batch_size"</span>: <span class="hljs-number">64</span>,
+    <span class="hljs-string">"gradient_accumulation_steps"</span>: <span class="hljs-number">1</span>,
+}
+
+train_args[<span class="hljs-string">"wandb_project"</span>] =  <span class="hljs-string">"sentiment-analysis"</span>
+train_args[<span class="hljs-string">"wandb_kwargs"</span>]  =  {<span class="hljs-string">"name"</span>: model_name}
+
+<span class="hljs-keyword">if</span> model_type == <span class="hljs-string">"xlnet"</span>:
+    train_args[<span class="hljs-string">"train_batch_size"</span>] = <span class="hljs-number">64</span>
+    train_args[<span class="hljs-string">"gradient_accumulation_steps"</span>] = <span class="hljs-number">2</span>
+</div></code></pre>
+<h1 id="text-modelling-using-gru">Text Modelling Using GRU</h1>
+<ul>
+<li><code>string column =&gt; list column =&gt; unq words, max len</code></li>
+<li><code>tokenizer =&gt; texts_to_sequences =&gt; pad_sequences</code></li>
+<li><code>params and callbacks</code></li>
+<li><code>Sequential =&gt; Embedding,GRU,GRU,Dense,Dropout,Dense =&gt; compile =&gt; summary</code></li>
+<li><code>fit =&gt; predict_classes</code></li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-comment"># data</span>
+mycol = <span class="hljs-string">'tweet_clean'</span>
+mylstcol = <span class="hljs-string">'tweet_lst_clean'</span>
+X_train  = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> df_Xtrain[mylstcol]] <span class="hljs-comment"># list of list</span>
+X_valid  = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> df_Xvalid[mylstcol]]
+X_test   = [i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> df_test[mylstcol]]
+
+<span class="hljs-comment"># get unique words</span>
+unq_words = set()
+maxlen    = <span class="hljs-number">0</span>
+
+<span class="hljs-keyword">for</span> lst <span class="hljs-keyword">in</span> tqdm(X_train):
+    unq_words.update(lst)
+    maxlen = len(lst) <span class="hljs-keyword">if</span> maxlen &lt; len(lst) <span class="hljs-keyword">else</span> maxlen
+
+<span class="hljs-comment"># tokenization</span>
+<span class="hljs-keyword">from</span> keras.preprocessing.text <span class="hljs-keyword">import</span> Tokenizer
+
+num_words = len(unq_words)
+tokenizer = Tokenizer(num_words=num_words)
+tokenizer.fit_on_texts(X_train)
+X_train   = tokenizer.texts_to_sequences(X_train)
+X_valid   = tokenizer.texts_to_sequences(X_valid)
+X_test    = tokenizer.texts_to_sequences(X_test)
+
+<span class="hljs-comment"># sequence</span>
+<span class="hljs-keyword">from</span> keras.preprocessing <span class="hljs-keyword">import</span> sequence
+
+X_train = sequence.pad_sequences(X_train, maxlen=maxlen)
+X_valid = sequence.pad_sequences(X_valid, maxlen=maxlen)
+X_test  = sequence.pad_sequences(X_test, maxlen=maxlen)
+
+<span class="hljs-comment"># modelling</span>
+<span class="hljs-keyword">from</span> keras.callbacks <span class="hljs-keyword">import</span> EarlyStopping
+<span class="hljs-keyword">from</span> neptunecontrib.monitoring.keras <span class="hljs-keyword">import</span> NeptuneMonitor
+
+early_stopping = EarlyStopping(min_delta = <span class="hljs-number">0.001</span>, mode = <span class="hljs-string">'max'</span>,
+                               monitor=<span class="hljs-string">'val_acc'</span>, patience=<span class="hljs-number">10</span>)
+callbacks = [early_stopping,NeptuneMonitor()]
+
+<span class="hljs-comment"># params</span>
+<span class="hljs-comment"># parameters</span>
+PARAMS = {<span class="hljs-string">'epoch_nr'</span>: <span class="hljs-number">5</span>,
+          <span class="hljs-string">'batch_size'</span>: <span class="hljs-number">256</span>,
+          <span class="hljs-string">'lr'</span>: <span class="hljs-number">0.001</span>,
+          <span class="hljs-string">'dropout'</span>: <span class="hljs-number">0.2</span>}
+
+<span class="hljs-comment"># model</span>
+model = Sequential()
+
+<span class="hljs-comment"># input_dim=num_words and output_dim=300</span>
+model.add(Embedding(num_words,<span class="hljs-number">300</span>,
+                    input_length=maxlen))
+
+model.add(GRU(units=<span class="hljs-number">128</span>,
+               dropout=PARAMS[<span class="hljs-string">'dropout'</span>],
+               recurrent_dropout=PARAMS[<span class="hljs-string">'dropout'</span>],
+               return_sequences=<span class="hljs-literal">True</span>))
+
+model.add(GRU(<span class="hljs-number">64</span>,
+               dropout=PARAMS[<span class="hljs-string">'dropout'</span>],
+               recurrent_dropout=PARAMS[<span class="hljs-string">'dropout'</span>],
+               return_sequences=<span class="hljs-literal">False</span>))
+
+model.add(Dense(<span class="hljs-number">100</span>,activation=<span class="hljs-string">'relu'</span>))
+
+model.add(Dropout(PARAMS[<span class="hljs-string">'dropout'</span>]))
+
+model.add(Dense(<span class="hljs-number">1</span>,activation=<span class="hljs-string">'sigmoid'</span>))
+
+<span class="hljs-comment"># for multiclass: dense=(num_classes,softmax) and loss=sparse_xentropy</span>
+
+model.compile(loss=<span class="hljs-string">'binary_crossentropy'</span>,
+              optimizer=Adam(lr=PARAMS[<span class="hljs-string">'lr'</span>]),
+              metrics=[<span class="hljs-string">'accuracy'</span>])
+
+model.summary()
+
+<span class="hljs-comment"># fitting</span>
+history = model.fit(X_train, y_train,
+                    validation_data=(X_valid, y_valid),
+                    epochs=PARAMS[<span class="hljs-string">'epoch_nr'</span>],
+                    batch_size=PARAMS[<span class="hljs-string">'batch_size'</span>],
+                    verbose=<span class="hljs-number">1</span>,
+                    callbacks=callbacks
+                    )
+
+valid_preds = model.predict_classes(X_valid)
+valid_preds = valid_preds.squeeze().tolist()
 </div></code></pre>
 
 </body>

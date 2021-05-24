@@ -36,7 +36,6 @@ We also have 1953 test tweets without label. (we need to upload the test predict
 | e03b_sentiment_analysis_bert_tf2_neptune | 0.8787 |  |
 
 
-
 # Text Analysis and Visualization
 - First do data cleaning.
 - PCA plot. (dimension reduction)
@@ -121,4 +120,130 @@ model = ClassificationModel(model_type, model_name, args=train_args)
 model.train_model(df_train, eval_df=None)
 
 test_preds, _, = model.predict(df_test['tweet'].to_numpy())
+
+# Here, train_args is following:
+train_args = {
+    "reprocess_input_data": True,
+    "overwrite_output_dir": True,
+    "use_cached_eval_features": True,
+    "output_dir": f"outputs/{model_type}",
+    "best_model_dir": f"outputs/{model_type}/best_model",
+    "train_batch_size": 128, # it was 128
+    "max_seq_length": 128, # 256 gives OOM
+    "num_train_epochs": 3,
+
+    # evaluation
+    "evaluate_during_training": False,
+    "evaluate_during_training_steps": 1000,
+    "save_model_every_epoch": False,
+    "save_eval_checkpoints": False,
+    "eval_batch_size": 64,
+    "gradient_accumulation_steps": 1,
+}
+
+train_args["wandb_project"] =  "sentiment-analysis"
+train_args["wandb_kwargs"]  =  {"name": model_name}
+
+if model_type == "xlnet":
+    train_args["train_batch_size"] = 64
+    train_args["gradient_accumulation_steps"] = 2
+```
+
+# Text Modelling Using GRU
+- `string column => list column => unq words, max len`
+- `tokenizer => texts_to_sequences => pad_sequences`
+- `params and callbacks`
+- `Sequential => Embedding,GRU,GRU,Dense,Dropout,Dense => compile => summary`
+- `fit => predict_classes`
+
+```python
+# data
+mycol = 'tweet_clean'
+mylstcol = 'tweet_lst_clean'
+X_train  = [i for i in df_Xtrain[mylstcol]] # list of list
+X_valid  = [i for i in df_Xvalid[mylstcol]]
+X_test   = [i for i in df_test[mylstcol]]
+
+# get unique words
+unq_words = set()
+maxlen    = 0
+
+for lst in tqdm(X_train):
+    unq_words.update(lst)
+    maxlen = len(lst) if maxlen < len(lst) else maxlen
+
+# tokenization
+from keras.preprocessing.text import Tokenizer
+
+num_words = len(unq_words)
+tokenizer = Tokenizer(num_words=num_words)
+tokenizer.fit_on_texts(X_train)
+X_train   = tokenizer.texts_to_sequences(X_train)
+X_valid   = tokenizer.texts_to_sequences(X_valid)
+X_test    = tokenizer.texts_to_sequences(X_test)
+
+# sequence
+from keras.preprocessing import sequence
+
+X_train = sequence.pad_sequences(X_train, maxlen=maxlen)
+X_valid = sequence.pad_sequences(X_valid, maxlen=maxlen)
+X_test  = sequence.pad_sequences(X_test, maxlen=maxlen)
+
+# modelling
+from keras.callbacks import EarlyStopping
+from neptunecontrib.monitoring.keras import NeptuneMonitor
+
+early_stopping = EarlyStopping(min_delta = 0.001, mode = 'max',
+                               monitor='val_acc', patience=10)
+callbacks = [early_stopping,NeptuneMonitor()]
+
+# params
+# parameters
+PARAMS = {'epoch_nr': 5,
+          'batch_size': 256,
+          'lr': 0.001,
+          'dropout': 0.2}
+
+# model
+model = Sequential()
+
+# input_dim=num_words and output_dim=300
+model.add(Embedding(num_words,300,
+                    input_length=maxlen))
+
+model.add(GRU(units=128,
+               dropout=PARAMS['dropout'],
+               recurrent_dropout=PARAMS['dropout'],
+               return_sequences=True))
+
+model.add(GRU(64,
+               dropout=PARAMS['dropout'],
+               recurrent_dropout=PARAMS['dropout'],
+               return_sequences=False))
+
+model.add(Dense(100,activation='relu'))
+
+model.add(Dropout(PARAMS['dropout']))
+
+model.add(Dense(1,activation='sigmoid'))
+
+# for multiclass: dense=(num_classes,softmax) and loss=sparse_xentropy
+
+model.compile(loss='binary_crossentropy',
+              optimizer=Adam(lr=PARAMS['lr']),
+              metrics=['accuracy'])
+
+model.summary()
+
+# fitting
+history = model.fit(X_train, y_train,
+                    validation_data=(X_valid, y_valid),
+                    epochs=PARAMS['epoch_nr'],
+                    batch_size=PARAMS['batch_size'],
+                    verbose=1,
+                    callbacks=callbacks
+                    )
+
+valid_preds = model.predict_classes(X_valid)
+valid_preds = valid_preds.squeeze().tolist()
 ```
